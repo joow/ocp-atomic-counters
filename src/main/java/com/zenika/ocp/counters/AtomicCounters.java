@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static spark.Spark.before;
 import static spark.Spark.port;
 import static spark.Spark.post;
 
@@ -14,6 +15,7 @@ public class AtomicCounters {
     public static void main(String[] args) {
         final int port = Integer.valueOf(Optional.ofNullable(System.getenv("PORT")).orElse("4567"));
         port(port);
+        before((request, response) -> response.type("text/plain"));
         post("/:counter", (request, response) -> incrementAndGet(request.params("counter")));
     }
 
