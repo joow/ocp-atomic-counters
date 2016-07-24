@@ -1,9 +1,27 @@
 apply plugin: 'java'
+apply plugin: 'application'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+mainClassName = 'com.zenika.ocp.counters.AtomicCounters'
 
 repositories {
     jcenter()
 }
 
 dependencies {
+    compile 'com.sparkjava:spark-core:2.5'
+}
 
+task stage(dependsOn: ['clean', 'installDist', 'heroku'])
+
+task heroku(dependsOn: ['procfile', 'sysprops'])
+
+task procfile << {
+    new File(projectDir, 'Procfile').text = "web: $startScripts.unixScript"
+}
+
+task sysprops << {
+    new File(projectDir, 'system.properties').text = "java.runtime.version=$sourceCompatibility"
 }
